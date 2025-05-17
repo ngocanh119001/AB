@@ -1,0 +1,30 @@
+services:
+  network-deploy-service:
+    networks:
+    - e-commerce
+  eureka-client-microservice-config:
+    extends:
+      service: network-deploy-service
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+  microservice-base-config:
+    extends:
+      service: eureka-client-microservice-config
+    environment:
+      # JAVA_TOOL_OPTIONS: "-javaagent:/app/libs/opentelemetry-javaagent.jar"
+      # OTEL_METRICS_EXPORTER: none
+      # OTEL_LOGS_EXPORTER: none
+      # OTEL_EXPORTER_OTLP_ENDPOINT: http://tempo:4317
+      # OTEL_EXPORTER_OTLP_PROTOCOL: grpc
+    # deploy:
+    #   resources:
+    #     limits:
+    #       memory: 700m
+
+  config-client-microservice-config:
+    extends:
+      service: microservice-base-config
+    environment:
+      SPRING_CONFIG_IMPORT: configserver:http://config-server:8888
+
+      

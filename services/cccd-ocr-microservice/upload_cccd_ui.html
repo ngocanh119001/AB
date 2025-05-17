@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nhận diện CCCD</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
+        #preview { max-width: 300px; margin-top: 10px; display: none; }
+        #info { margin-top: 20px; text-align: left; display: none; }
+    </style>
+</head>
+<body>
+    <h2>Nhận diện thông tin CCCD</h2>
+    <input type="file" id="fileInput" accept="image/*"> <br>
+    <img id="preview" src="" alt="Xem trước ảnh">
+    <br>
+    <button onclick="uploadImage()">Xác nhận</button>
+    
+    <div id="info">
+        <h3>Thông tin nhận diện:</h3>
+        <p><strong>Họ và tên:</strong> <span id="hoTen"></span></p>
+        <p><strong>Ngày sinh:</strong> <span id="ngaySinh"></span></p>
+        <p><strong>Giới tính:</strong> <span id="gioiTinh"></span></p>
+        <p><strong>Quê quán:</strong> <span id="queQuan"></span></p>
+        <p><strong>Địa chỉ thường trú:</strong> <span id="diaChiThuongTru"></span></p>
+    </div>
+
+    <script>
+        document.getElementById("fileInput").addEventListener("change", function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById("preview").src = e.target.result;
+                    document.getElementById("preview").style.display = "block";
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function uploadImage() {
+            const fileInput = document.getElementById("fileInput");
+            if (!fileInput.files[0]) {
+                alert("Vui lòng chọn ảnh CCCD.");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("image", fileInput.files[0]);
+
+            fetch("http://localhost:3000/upload", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById("info").style.display = "block";
+                    document.getElementById("hoTen").innerText = data.data.hoTen;
+                    document.getElementById("ngaySinh").innerText = data.data.ngaySinh;
+                    document.getElementById("gioiTinh").innerText = data.data.gioiTinh;
+                    document.getElementById("quocTich").innerText = data.data.quocTich;
+                    document.getElementById("queQuan").innerText = data.data.queQuan;
+                    document.getElementById("diaChiThuongTru").innerText = data.data.diaChiThuongTru;
+                } else {
+                    alert("Lỗi: " + (data.error || "Không thể nhận diện"));
+                }
+            })
+            .catch(error => {
+                alert("Có lỗi xảy ra: " + error.message);
+            });
+        }
+    </script>
+</body>
+</html>

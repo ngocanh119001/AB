@@ -1,0 +1,62 @@
+spring:
+  application:
+    name: product-service
+  codec:
+      max-in-memory-size: 20MB  # Giới hạn bộ nhớ tối đa cho dữ liệu multipart
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 40MB
+ 
+  config:
+    import:
+      ${SPRING_CONFIG_IMPORT:configserver:http://localhost:8888}
+  data:
+    mongodb:
+      uri: ${SPRING_DATA_MONGODB_URI:mongodb://localhost:27017/product-service}
+      database: ${SPRING_DATA_MONGODB_DATABASE:product-service}
+    redis:
+      host: ${SPRING_REDIS_HOST:localhost}
+      port: ${SPRING_REDIS_PORT:6379}
+      
+eureka:
+  client:
+    register-with-eureka: true # Không đăng ký chính nó như một client
+    fetch-registry: true # Không lấy registry từ server khác
+    service-url:
+      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://localhost:8761/eureka/}
+  instance:
+      prefer-ip-address: true # Use IP address instead of hostname
+      instance-id: ${spring.application.name}:${server.port} # Unique instance ID
+#  cloud:
+#    config:
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    shutdown:
+      access: unrestricted
+    health:
+      probes:
+        enabled: true
+  health:
+    readinessstate:
+      enabled: true
+    livenessstate:
+      enabled: true
+  info:
+    env:
+      enabled: true
+
+server: 
+  port: 8000
+
+info:
+  app:
+    name: "product-service"
+    description: "Product service for Cloning shopee"
+    version: "1.0.0"
+
+

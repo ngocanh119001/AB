@@ -1,0 +1,14 @@
+/.env
+/db-volume/product-mongo-data/*
+/db-volume/review-mongo-data/*
+/db-volume/cart-mongo-data/*
+/db-volume/voucher-mongo-data/*
+/db-volume/order-mysql-data/*
+/db-volume/user-mongo-data/*
+/db-volume/redis-data/*
+/.data/*
+/temp/*
+/temp
+
+/keycloak/keycloak-data/h2/keycloakdb.trace.db
+/keycloak/keycloak-data/h2/keycloakdb.mv.db

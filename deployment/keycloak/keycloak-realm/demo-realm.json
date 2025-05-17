@@ -1,0 +1,41 @@
+{
+  "realm": "demo",
+  "enabled": true,
+  "clients": [
+    {
+      "clientId": "backend-client",
+      "enabled": true,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "rHNIOCPBdTAv9zVJL4FjHWLUM6vwZe9P", 
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": true, 
+      "attributes": {
+        "pkce.code.challenge.method": "S256",
+        "backchannel.logout.session.required": "true",
+        "client_credentials.use_refresh_token": "false"
+      },
+      "webOrigins": ["+"]
+    },
+    {
+      "clientId": "frontend-client",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false, 
+      "attributes": {
+        "pkce.code.challenge.method": "S256",
+        "exclude.session.state.from.auth.response": "true",
+        "oauth2.device.authorization.grant.enabled": "false"
+      },
+      "redirectUris": [],
+      "webOrigins": []
+    }
+  ]
+  
+
+  
+}

@@ -1,0 +1,71 @@
+server:
+  port: 8002
+  
+spring:
+  application:
+    name: user-service
+  codec:
+    max-in-memory-size: 5MB  # Giới hạn bộ nhớ tối đa cho dữ liệu multipart
+  servlet:
+    multipart:
+      max-file-size: 3MB
+      max-request-size: 10MB
+  config:
+    import:
+      ${SPRING_CONFIG_IMPORT:configserver:http://localhost:8888}
+  data:
+    mongodb:
+      uri: ${SPRING_DATA_MONGODB_URI:mongodb://localhost:27021/user-service}
+      database: ${SPRING_DATA_MONGODB_DATABASE:user-service}
+  rabbitmq:
+      host: ${SPRING_RABBITMQ_HOST:localhost}
+      port: ${SPRING_RABBITMQ_PORT:5672}
+      username: guest
+      password: guest
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI:http://localhost:8180/realms/demo}
+          jwk-set-uri: ${SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI:http://localhost:8180/realms/demo/protocol/openid-connect/certs}
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.keycloak: DEBUG
+    org.springframework.web.client: DEBUG
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    shutdown:
+      access: unrestricted
+    health:
+      probes:
+        enabled: true
+  health:
+    readinessstate:
+      enabled: true
+    livenessstate:
+      enabled: true
+  info:
+    env:
+      enabled: true         
+                   
+eureka:
+  client:
+    register-with-eureka: true # Không đăng ký chính nó như một client
+    fetch-registry: true # Không lấy registry từ server khác
+    service-url:
+      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://localhost:8761/eureka/}
+  instance:
+      prefer-ip-address: true # Use IP address instead of hostname
+      instance-id: ${spring.application.name}:${server.port} # Unique instance ID  
+
+keycloak:
+  admin-url: ${KEYCLOAK_ADMIN_URL:http://localhost:8180}
+  admin-username: ${KEYCLOAK_ADMIN_USERNAME:admin}
+  admin-password: ${KEYCLOAK_ADMIN_PASSWORD:admin}
+  realm: ${KEYCLOAK_REALM:master}
+  client-id: ${KEYCLOAK_CLIENT_ID:admin-cli}

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 8px;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f8f9fa;
+        }
+
+        .total-row {
+            font-weight: bold;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1>HÓA ĐƠN BÁN HÀNG</h1>
+        <p>Ngày: {{date}}</p>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Tên sản phẩm</th>
+                <th>Đơn vị</th>
+                <th>Số lượng</th>
+                <th>Đơn giá</th>
+                <th>Thành tiền</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each products}}
+            <tr>
+                <td>{{name}}</td>
+                <td>{{unit}}</td>
+                <td>{{quantity}}</td>
+                <td class="text-right">{{price}} VND</td>
+                <td class="text-right">{{total}} VND</td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+
+    <div style="margin-top: 20px;">
+        <table style="width: 300px; float: right;">
+            <tr class="total-row">
+                <td>Tạm tính:</td>
+                <td class="text-right">{{subtotal}} VND</td>
+            </tr>
+            <tr class="total-row">
+                <td>Thuế (20%):</td>
+                <td class="text-right">{{tax}} VND</td>
+            </tr>
+            <tr class="total-row">
+                <td>Tổng cộng:</td>
+                <td class="text-right">{{grandTotal}} VND</td>
+            </tr>
+        </table>
+    </div>
+</body>
+
+</html>

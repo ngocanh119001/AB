@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Danh sách sản phẩm</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 p-6">
+  <div class="max-w-4xl mx-auto">
+    <h1 class="text-3xl font-bold mb-6">Danh sách sản phẩm</h1>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <% products.forEach(product => { %>
+        <div class="bg-white rounded shadow p-4">
+          <h2 class="text-xl font-semibold"><%= product.name %></h2>
+          <p class="text-gray-600 mb-2"><%= product.description %></p>
+          <p class="font-bold text-green-600"><%= product.price.toLocaleString() %> VNĐ</p>
+        </div>
+      <% }); %>
+    </div>
+  </div>
+</body>
+</html>

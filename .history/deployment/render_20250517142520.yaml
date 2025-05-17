@@ -1,0 +1,340 @@
+services:
+  # Config Server to manage application configurations
+  - type: web
+    name: config-server
+    env: docker
+    region: singapore
+    plan: free
+    branch: main
+    rootDir: services/config-server
+    dockerfilePath: Dockerfile
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      # - key: SPRING_CLOUD_CONFIG_SERVER_GIT_USERNAME
+      #   # value: MyLinh21008301 # Enter GitHub username manually
+      #   sync: false # Enter GitHub username manually in Render Dashboard
+      # - key: SPRING_CLOUD_CONFIG_SERVER_GIT_PASSWORD
+      #   # value: ${{ secrets.RENDER_TEST } # Enter GitHub token manually
+      #   sync: false # Enter GitHub token manually in Render Dashboard
+      - key: SPRING_CLOUD_CONFIG_SERVER_GIT_URI
+        value: https://github.com/MyLinh21008301/BEShopTest.git # Add your Git repository URI
+
+  # Eureka Server for service discovery
+  - type: web
+    name: eureka-server
+    env: docker
+    region: singapore
+    plan: free
+    branch: main
+    rootDir: services/eureka-server
+    dockerfilePath: Dockerfile
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+        value: http://eureka-server:8761/eureka/ # Update with public URL after deployment
+
+  # API Gateway to route requests
+  - type: web
+    name: gateway
+    env: docker
+    region: singapore
+    plan: free
+    branch: main
+    rootDir: services/gateway
+    dockerfilePath: Dockerfile
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+        value: http://eureka-server:8761/eureka/ # Update with public URL after deployment
+
+  # Product Service
+  - type: web
+    name: product-service
+    env: docker
+    region: singapore
+    plan: free
+    branch: main
+    rootDir: services/product-service
+    dockerfilePath: Dockerfile
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: SPRING_CLOUD_CONFIG_URI
+        value: http://config-server:8888 # Update with public URL after deployment
+      - key: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+        value: http://eureka-server:8761/eureka/ # Update with public URL after deployment
+      - key: SPRING_DATA_MONGODB_URI
+        sync: false # Enter MongoDB connection string manually (e.g., mongodb://admin:password@mongodb.internal:27017/product-service?authSource=admin)
+      - key: SPRING_DATA_MONGODB_DATABASE
+        value: product-service
+      - key: SPRING_REDIS_HOST
+        value: redis.internal
+      - key: SPRING_REDIS_PORT
+        value: "6379"
+      - key: SPRING_SERVLET_MULTIPART_MAX_FILE_SIZE
+        value: 10MB
+      - key: SPRING_SERVLET_MULTIPART_MAX_REQUEST_SIZE
+        value: 40MB
+      - key: SPRING_CODEC_MAX_IN_MEMORY_SIZE
+        value: 20MB
+
+  # Review Service
+  - type: web
+    name: review-service
+    env: docker
+    region: singapore
+    plan: free
+    branch: main
+    rootDir: services/review-service
+    dockerfilePath: Dockerfile
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: SPRING_CLOUD_CONFIG_URI
+        value: http://config-server:8888 # Update with public URL after deployment
+      - key: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+        value: http://eureka-server:8761/eureka/ # Update with public URL after deployment
+      - key: SPRING_DATA_MONGODB_URI
+        sync: false # Enter MongoDB connection string manually
+      - key: SPRING_DATA_MONGODB_DATABASE
+        value: review-service
+
+  # Cart Service
+  - type: web
+    name: cart-service
+    env: docker
+    region: singapore
+    plan: free
+    branch: main
+    rootDir: services/cart-service
+    dockerfilePath: Dockerfile
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: SPRING_CLOUD_CONFIG_URI
+        value: http://config-server:8888 # Update with public URL after deployment
+      - key: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+        value: http://eureka-server:8761/eureka/ # Update with public URL after deployment
+      - key: SPRING_DATA_MONGODB_URI
+        sync: false # Enter MongoDB connection string manually
+      - key: SPRING_DATA_MONGODB_DATABASE
+        value: cart-service
+      - key: SPRING_CODEC_MAX_IN_MEMORY_SIZE
+        value: 20MB
+
+  # Voucher Service
+  - type: web
+    name: voucher-service
+    env: docker
+    region: singapore
+    plan: free
+    branch: main
+    rootDir: services/voucher-service
+    dockerfilePath: Dockerfile
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: SPRING_CLOUD_CONFIG_URI
+        value: http://config-server:8888 # Update with public URL after deployment
+      - key: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+        value: http://eureka-server:8761/eureka/ # Update with public URL after deployment
+      - key: SPRING_DATA_MONGODB_URI
+        sync: false # Enter MongoDB connection string manually
+      - key: SPRING_DATA_MONGODB_DATABASE
+        value: voucher-service
+      - key: SPRING_DATA_REDIS_HOST
+        value: redis.internal
+      - key: SPRING_DATA_REDIS_PORT
+        value: "6379"
+
+  # User Service
+  - type: web
+    name: user-service
+    env: docker
+    region: singapore
+    plan: free
+    branch: main
+    rootDir: services/user-service
+    dockerfilePath: Dockerfile
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: SPRING_CLOUD_CONFIG_URI
+        value: http://config-server:8888 # Update with public URL after deployment
+      - key: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+        value: http://eureka-server:8761/eureka/ # Update with public URL after deployment
+      - key: SPRING_DATA_MONGODB_URI
+        sync: false # Enter MongoDB connection string manually
+      - key: SPRING_DATA_MONGODB_DATABASE
+        value: user-service
+
+  # Order Service
+  - type: web
+    name: order-service
+    env: docker
+    region: singapore
+    plan: free
+    branch: main
+    rootDir: services/order-service
+    dockerfilePath: Dockerfile
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: SPRING_CLOUD_CONFIG_URI
+        value: http://config-server:8888 # Update with public URL after deployment
+      - key: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+        value: http://eureka-server:8761/eureka/ # Update with public URL after deployment
+      - key: SPRING_R2DBC_URL
+        sync: false # Enter MySQL connection string manually (e.g., r2dbc:mysql://mysql.internal:3306/order-service)
+      - key: SPRING_R2DBC_USERNAME
+        sync: false # Enter MySQL username manually
+      - key: SPRING_R2DBC_PASSWORD
+        sync: false # Enter MySQL password manually
+      - key: SPRING_REDIS_HOST
+        value: redis.internal
+      - key: SPRING_REDIS_PORT
+        value: "6379"
+
+  # Payment Service
+  - type: web
+    name: payment-service
+    env: docker
+    region: singapore
+    plan: free
+    branch: main
+    rootDir: services/payment-service
+    dockerfilePath: Dockerfile
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: SPRING_CLOUD_CONFIG_URI
+        value: http://config-server:8888 # Update with public URL after deployment
+      - key: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+        value: http://eureka-server:8761/eureka/ # Update with public URL after deployment
+      - key: SPRING_REDIS_HOST
+        value: redis.internal
+      - key: SPRING_REDIS_PORT
+        value: "6379"
+      - key: SPRING_RABBITMQ_HOST
+        sync: false # Enter external RabbitMQ host manually (e.g., CloudAMQP)
+      - key: SPRING_RABBITMQ_PORT
+        sync: false # Enter external RabbitMQ port manually
+      - key: SPRING_RABBITMQ_USERNAME
+        sync: false # Enter RabbitMQ username manually
+      - key: SPRING_RABBITMQ_PASSWORD
+        sync: false # Enter RabbitMQ password manually
+
+  # Invoice Service
+  - type: web
+    name: invoice-service
+    env: docker
+    region: singapore
+    plan: free
+    branch: main
+    rootDir: services/invoice-service
+    dockerfilePath: Dockerfile
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: SPRING_CLOUD_CONFIG_URI
+        value: http://config-server:8888 # Update with public URL after deployment
+      - key: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+        value: http://eureka-server:8761/eureka/
+
+  # Printer Service
+  - type: web
+    name: printer-service
+    env: docker
+    region: singapore
+    plan: free
+    branch: main
+    rootDir: services/printer-service
+    dockerfilePath: Dockerfile
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+        value: http://eureka-server:8761/eureka/
+
+  # Statistical Service
+  - type: web
+    name: statistical-service
+    env: docker
+    region: singapore
+    plan: free
+    branch: main
+    rootDir: services/statistical-service
+    dockerfilePath: Dockerfile
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: SPRING_CLOUD_CONFIG_URI
+        value: http://config-server:8888
+      - key: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+        value: http://eureka-server:8761/eureka/
+
+  # MongoDB as a private service (if you're using a custom image)
+  # - type: private_service
+  #   name: mongodb
+  #   env: docker
+  #   region: singapore
+  #   rootDir: deployment
+  #   dockerfilePath: Dockerfile.mongodb
+  #   disk:
+  #     name: mongodb-data
+  #     mountPath: /data/db
+  #     sizeGB: 10
+  #   envVars:
+  #     - key: MONGO_INITDB_ROOT_USERNAME
+  #       value: admin
+  #     - key: MONGO_INITDB_ROOT_PASSWORD
+  #       value: your_secure_password  # Replace with a secure password
+  - type: database
+    name: mongodb
+    env: docker
+    region: singapore
+    plan: free # Free tỉer for MongoDB
+    dbName: product-service
+    envVars:
+      - key: MONGO_INITDB_ROOT_USERNAME
+        value: admin
+      - key: MONGO_INITDB_ROOT_PASSWORD
+        value: your_secure_password
+
+  # Redis as a private service (if you're using a custom image)
+  - type: kvstore
+    name: redis
+    env: docker
+    region: singapore
+    plan: free   
+    envVars:
+      - key: REDIS_PASSWORD
+        value: your_secure_password # Replace with a secure password
+
+databases:
+  - name: order-mysql-db
+    engine: mysql
+    plan: free
+    region: singapore
+    dbName: order-service
+
+kvStores:
+  - name: redis
+    plan: free
+    region: singapore

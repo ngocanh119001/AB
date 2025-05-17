@@ -1,0 +1,44 @@
+server:
+  port: 8761
+  
+spring:
+  application:
+    name: eureka-server
+
+eureka:
+  client:
+    register-with-eureka: false # Không đăng ký chính nó như một client
+    fetch-registry: false # Không lấy registry từ server khác
+    service-url:
+      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://localhost:8761/eureka/} # URL của Eureka Server
+#  instance:
+#      prefer-ip-address: true # Dùng IP thay vì hostname
+#      instance-id: ${spring.application.name}:${random.value} # ID duy nhất cho instance
+  server:
+    enable-self-preservation: false # (Tùy chọn) Tắt chế độ tự bảo vệ trong môi trường dev
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    shutdown:
+      access: unrestricted
+    health:
+      probes:
+        enabled: true
+  health:
+    readinessstate:
+      enabled: true
+    livenessstate:
+      enabled: true
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: "eureka-server"
+    description: "Eureka server for Cloning shopee"
+    version: "1.0.0"

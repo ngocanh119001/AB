@@ -1,0 +1,49 @@
+spring:
+  application:
+    name: review-service
+  config:
+    import:
+      ${SPRING_CONFIG_IMPORT:configserver:http://localhost:8888}
+  data:
+    mongodb:
+      uri: ${SPRING_DATA_MONGODB_URI:mongodb://localhost:27018/review-service}
+      database: ${SPRING_DATA_MONGODB_DATABASE:review-service}
+      auto-index-creation: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    shutdown:
+      access: unrestricted
+    health:
+      probes:
+        enabled: true
+  health:
+    readinessstate:
+      enabled: true
+    livenessstate:
+      enabled: true
+  info:
+    env:
+      enabled: true
+      
+server:
+  port: 8001
+
+eureka:
+  client:
+    register-with-eureka: true # Không đăng ký chính nó như một client
+    fetch-registry: true # Không lấy registry từ server khác
+    service-url:
+      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://localhost:8761/eureka/}
+  instance:
+      prefer-ip-address: true # Use IP address instead of hostname
+      instance-id: ${spring.application.name}:${server.port} # Unique instance ID  
+
+info:
+  app:
+    name: "review-service"
+    description: "Review service for Cloning shopee"
+    version: "1.0.0"

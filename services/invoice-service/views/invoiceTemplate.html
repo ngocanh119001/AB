@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Hóa đơn</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            width: 80%;
+            margin: auto;
+        }
+
+        .header {
+            text-align: center;
+        }
+
+        .info {
+            margin-bottom: 20px;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th,
+        .table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .total {
+            text-align: right;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2 class="header">HÓA ĐƠN BÁN HÀNG</h2>
+        <div class="info">
+            <p><strong>Mã Hóa Đơn:</strong> {{maHoaDon}}</p>
+            <p><strong>Ngày Tạo:</strong> {{ngayTao}}</p>
+            <p><strong>Khách Hàng:</strong> {{nguoiMua.ten}}</p>
+            <!-- <p><strong>Địa Chỉ:</strong> {{diaChiGiaoHang.diaChi}}</p> -->
+            <p><strong>Họ Tên Người Nhận:</strong> {{diaChiGiaoHang.hoTenNguoiNhan}}</p>
+            <p><strong>Địa Chỉ:</strong> {{diaChiGiaoHang.diaChiCuThe}}, {{diaChiGiaoHang.phuong}}, {{diaChiGiaoHang.quan}},
+                {{diaChiGiaoHang.tinh}}</p>
+
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Sản phẩm</th>
+                    <th>Số lượng</th>
+                    <th>Đơn giá</th>
+                    <th>Tổng tiền</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each chiTietHoaDon}}
+                <tr>
+                    <td>{{tenSanPham}}</td>
+                    <td>{{soLuong}}</td>
+                    <td>{{giaBan}}</td>
+                    <td>{{tongTien}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+        <p class="total">Tổng cộng: {{tongTien}} VND</p>
+    </div>
+</body>
+
+</html>

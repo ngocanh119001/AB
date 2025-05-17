@@ -1,0 +1,86 @@
+version: "3.8"
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongodb_data:/data/db
+    command: mongod --auth --bind_ip_all
+    networks:
+      - backend
+
+  eureka-server:
+    image: steeltoeoss/eureka-server
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    networks:
+      - backend
+
+  invoice-service:
+    build: .
+    container_name: invoice-service
+    depends_on:
+      eureka-server:
+        condition: service_started
+      mongodb:
+        condition: service_started
+    ports:
+      - "3000:3000"
+    networks:
+      - backend
+
+  voucher-service:
+    build:
+      context: ./voucher-service # <-- Chỉ định context là thư mục của service mới
+      dockerfile: Dockerfile
+    container_name: voucher-service
+    depends_on:
+      eureka-server:
+        condition: service_started
+      mongodb:
+        condition: service_started
+    ports:
+      - "3001:3001"
+    networks:
+      - backend
+    environment:
+      PORT: 3001
+      MONGODB_URI: mongodb://admin:password@mongodb:27017/mydb?authSource=admin
+      EUREKA_HOST: eureka-server
+      EUREKA_PORT: 8761
+      SERVICE_NAME: voucher-service
+      HOST_ACCESSIBLE_HOSTNAME: localhost
+
+  printer-service:
+    build:
+      context: ./printer-service
+      dockerfile: Dockerfile
+    container_name: printer-service
+    depends_on:
+      eureka-server:
+        condition: service_started
+      # Không cần mongodb nếu service này chỉ tạo PDF từ input
+    ports:
+      - "3002:3002"
+    networks:
+      - backend
+    environment:
+      PORT: 3002
+      EUREKA_HOST: eureka-server
+      EUREKA_PORT: 8761
+      SERVICE_NAME: printer-service
+      HOST_ACCESSIBLE_HOSTNAME: localhost
+
+volumes:
+  mongodb_data:
+
+networks:
+  backend:
+    driver: bridge
